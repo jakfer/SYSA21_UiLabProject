@@ -18,6 +18,9 @@ public class CustomerApplication {
 	private JTextField textField_CardNbr;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
+	private Controller controller; //Koppling till klassen Controller
+	private CustomerRegister customerRegister;
+	
 	/**
 	 * Launch the application.
 	 */
