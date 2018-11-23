@@ -34,5 +34,6 @@ public class CustomerRegister {
 		Customer c = this.findCustomer(cNumber);
 		if (c != null) {
 		c.setCName(newName);
-		}
+		}	
+	}
 }
