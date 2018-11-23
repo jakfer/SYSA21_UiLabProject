@@ -7,7 +7,7 @@ public class CreditCard {
 	private Customer holder;
 	
 	//constructor
-	public Creditcard(int cNbr, String type) {
+	public CreditCard(int cNbr, String type) {
 		this.setCardNumber(cNbr);
 		this.setType(type);
 		}
