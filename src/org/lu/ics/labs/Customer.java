@@ -1,10 +1,18 @@
 package org.lu.ics.labs;
 
 public class Customer {
+	//instance variables
 	private String cNumber;
 	private String cName;
 	private CreditCard creditcard;
 	
+	//constructor
+	public Customer(String cNumber, String cName) {
+		this.setCNumber(cNumber);
+		this.setCName(cName);
+	}
+	
+	//getters and setters
 	public String getCNumber() {
 		return this.cNumber;
 	}
@@ -31,10 +39,5 @@ public class Customer {
 		
 	public void addCreditcard(CreditCard card) {
 		this.setCreditcard(card);
-	}
-		
-	public Customer(String cNumber, String cName) {
-		this.setCNumber(cNumber);
-		this.setCName(cName);
 	}
 }
