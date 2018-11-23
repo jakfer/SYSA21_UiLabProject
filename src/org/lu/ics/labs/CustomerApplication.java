@@ -8,6 +8,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class CustomerApplication {
 
@@ -17,6 +19,13 @@ public class CustomerApplication {
 	private JTextField textField_CardType;
 	private JTextField textField_CardNbr;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	JLabel lblName = new JLabel("Name:");
+	JLabel lblCardNumber = new JLabel("Card Number:");
+	JLabel lblCustomerNumber = new JLabel("Customer Number:");
+	JLabel lblCardType = new JLabel("Card Type:");
+	JRadioButton rdbtnHasCard = new JRadioButton("Has Card");
+	JRadioButton rdbtnNoCard = new JRadioButton("No Card");
+	JLabel lblResponse = new JLabel("Response:");
 
 	private Controller controller; //Koppling till klassen Controller
 	private CustomerRegister customerRegister;
@@ -54,10 +63,62 @@ public class CustomerApplication {
 		frame.getContentPane().setLayout(null);
 		
 		JButton btnAdd = new JButton("Add");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnAdd.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+					 String cName = textField_Name.getText();
+					 String cNumber = textField_CNbr.getText();
+					 if (rdbtnHasCard.isSelected()) {
+					 String cardType = textField_CardType.getText();
+					 int cardNumber;
+					 try {
+					 cardNumber = Integer.parseInt(textField_CardNbr.getText());
+					 controller.addCustomer(cNumber, cName, cardNumber, cardType);
+					 lblResponse.setText("Response:");
+					 }catch (Exception e1) {
+					 lblResponse.setText("Response: Ogiltigt värde, Card Number.");
+					 }
+					 } else {
+					 controller.addCustomer(cNumber, cName);
+					 lblResponse.setText("Response:");
+					 }
+					}
+					});
+			}
+		});
 		btnAdd.setBounds(34, 353, 97, 25);
 		frame.getContentPane().add(btnAdd);
 		
 		JButton btnFind = new JButton("Find");
+		btnFind.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnFind.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+					 String cNumber = textField_CNbr.getText();
+					 String[] tmpCustomer = controller.findCustomer(cNumber);
+					 if (tmpCustomer != null) {
+					 lblResponse.setText("Response:");
+					 if (tmpCustomer.length == 4) {//Have creditcard
+					 textField_CNbr.setText(tmpCustomer[0]);
+					 textField_Name.setText(tmpCustomer[1]);
+					 textField_CardType.setText(tmpCustomer[2]);
+					 textField_CardNbr.setText(tmpCustomer[3]);
+					 rdbtnHasCard.setSelected(true);
+					 } else if (tmpCustomer.length == 2) {
+					 textField_CNbr.setText(tmpCustomer[0]);
+					 textField_Name.setText(tmpCustomer[1]);
+					 textField_CardType.setText("");
+					 textField_CardNbr.setText("");
+					 rdbtnNoCard.setSelected(true);
+					 }
+					 }else {
+					 lblResponse.setText("Response: Customer not found");
+					 }
+					}
+					});
+			}
+		});
 		btnFind.setBounds(34, 391, 97, 25);
 		frame.getContentPane().add(btnFind);
 		
@@ -66,6 +127,23 @@ public class CustomerApplication {
 		frame.getContentPane().add(btnDelete);
 		
 		JButton btnNewName = new JButton("New Name");
+		btnNewName.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnNewName.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+					 String cNumber = textField_CNbr.getText();
+					 String[] tmpCustomer = controller.findCustomer(cNumber);
+					 if (tmpCustomer != null) {
+					 lblResponse.setText("Response:");
+					 String newName = textField_Name.getText();
+					 controller.updateCustomerName(cNumber, newName);
+					 }else{
+					 lblResponse.setText("Response: Customer not found");
+					 }
+					}
+					});
+			}
+		});
 		btnNewName.setBounds(249, 353, 97, 25);
 		frame.getContentPane().add(btnNewName);
 		
@@ -89,34 +167,31 @@ public class CustomerApplication {
 		textField_CardNbr.setBounds(139, 244, 116, 22);
 		frame.getContentPane().add(textField_CardNbr);
 		
-		JLabel lblName = new JLabel("Name:");
 		lblName.setBounds(61, 50, 56, 16);
 		frame.getContentPane().add(lblName);
 		
-		JLabel lblCardNumber = new JLabel("Card Number:");
 		lblCardNumber.setBounds(12, 249, 126, 16);
 		frame.getContentPane().add(lblCardNumber);
 		
-		JLabel lblCustomerNumber = new JLabel("Customer Number:");
 		lblCustomerNumber.setBounds(12, 87, 133, 16);
 		frame.getContentPane().add(lblCustomerNumber);
 		
-		JLabel lblCardType = new JLabel("Card Type:");
 		lblCardType.setBounds(12, 212, 106, 16);
 		frame.getContentPane().add(lblCardType);
 		
-		JRadioButton rdbtnHasCard = new JRadioButton("Has Card");
 		buttonGroup.add(rdbtnHasCard);
 		rdbtnHasCard.setBounds(149, 115, 127, 25);
 		frame.getContentPane().add(rdbtnHasCard);
 		
-		JRadioButton rdbtnNoCard = new JRadioButton("No Card");
 		buttonGroup.add(rdbtnNoCard);
 		rdbtnNoCard.setBounds(149, 152, 127, 25);
 		frame.getContentPane().add(rdbtnNoCard);
 		
-		JLabel lblResponse = new JLabel("Response:");
 		lblResponse.setBounds(12, 282, 459, 16);
 		frame.getContentPane().add(lblResponse);
+		
+		customerRegister = new CustomerRegister();
+		controller = new Controller(customerRegister, frame);
+
 	}
 }
